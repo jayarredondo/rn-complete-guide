@@ -42,7 +42,17 @@ export default function App() {
    <View>
     {/* FlatLists are used for larger collections of elements. The ScrollView Component renders all elements, whereas, 
      FlatLists only render what is visible on the device. The data prop must point to an array. renderItem is a function that returns the view.
-     The keyExtractor prop takes in a function which takes in two arugments, the item and index, then return the identifier. */}
+     The keyExtractor prop takes in a function which takes in two arugments, the item and index, then return the identifier.
+     
+     Additionally, if we want to render multiple elements, we can use JSX and the map method to render a views and other components.
+
+      {courseGoals.map((goal) =>
+        <View>
+          <Text>{goal}</Text>
+        </View>
+        )}
+
+     */}
     <FlatList
      keyExtractor={(item, index) => item.id}
      data={courseGoals}

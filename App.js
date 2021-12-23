@@ -1,46 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import {
- StyleSheet,
- Text,
- View,
- Button,
- TextInput,
- ScrollView,
- FlatList,
-} from 'react-native';
+import { StyleSheet, View, Button, FlatList } from 'react-native';
+
+import GoalItem from './components/GoalItem';
+import GoalInput from './components/GoalInput';
 
 export default function App() {
  // Varibales to manage state.
- const [enteredGoal, setEnteredGoal] = useState('');
  const [courseGoals, setCourseGoals] = useState([]);
-
- // Event handler for setting a goal when a user types in the input component.
- const goalInputHandler = (enteredText) => {
-  setEnteredGoal(enteredText);
- };
+ const [isAddMode, setIsAddMode] = useState(false);
 
  // Event Handler for when user submits a goal.
- const addGoalHandler = () => {
+ const addGoalHandler = (goalTitle) => {
   setCourseGoals((currentGoals) => [
    ...currentGoals,
-   { id: Math.random().toString(), value: enteredGoal },
+   { id: Math.random().toString(), value: goalTitle },
   ]);
+  setIsAddMode(false);
  };
+
+ const deleteGoal = (goalId) => {
+  setCourseGoals((currentGoals) => {
+   return currentGoals.filter((goal) => goal.id !== goalId);
+  });
+ };
+
+ const cancelAddGoal = () => setIsAddMode(false);
 
  return (
   <View style={styles.screen}>
-   <View style={styles.inputContainer}>
-    <TextInput
-     placeholder='Enter a Goal'
-     style={styles.input}
-     onChangeText={goalInputHandler}
-     value={enteredGoal}
-    />
-    <Button title='ADD' onPress={addGoalHandler} />
-   </View>
-   <View>
-    {/* FlatLists are used for larger collections of elements. The ScrollView Component renders all elements, whereas, 
+   <Button title='Add New Goal' onPress={() => setIsAddMode(true)} />
+   {/* FlatLists are used for larger collections of elements. The ScrollView Component renders all elements, whereas, 
      FlatLists only render what is visible on the device. The data prop must point to an array. renderItem is a function that returns the view.
      The keyExtractor prop takes in a function which takes in two arugments, the item and index, then return the identifier.
      
@@ -53,16 +43,22 @@ export default function App() {
         )}
 
      */}
-    <FlatList
-     keyExtractor={(item, index) => item.id}
-     data={courseGoals}
-     renderItem={(itemData) => (
-      <View style={styles.listItem}>
-       <Text>{itemData.item.value}</Text>
-      </View>
-     )}
-    />
-   </View>
+   <GoalInput
+    visible={isAddMode}
+    onAddGoal={addGoalHandler}
+    onCancel={cancelAddGoal}
+   />
+   <FlatList
+    keyExtractor={(item, index) => item.id}
+    data={courseGoals}
+    renderItem={(itemData) => (
+     <GoalItem
+      id={itemData.item.id}
+      onDelete={deleteGoal}
+      title={itemData.item.value}
+     />
+    )}
+   />
   </View>
  );
 }
@@ -70,22 +66,5 @@ export default function App() {
 const styles = StyleSheet.create({
  screen: {
   padding: 50,
- },
- inputContainer: {
-  flexDirection: 'row',
-  justifyContent: 'space-around',
-  alignItems: 'center',
- },
- input: {
-  borderWidth: 1,
-  padding: 5,
-  width: '80%',
- },
- listItem: {
-  padding: 10,
-  marginVertical: 10,
-  backgroundColor: '#ccc',
-  borderColor: 'black',
-  borderWidth: 1,
  },
 });

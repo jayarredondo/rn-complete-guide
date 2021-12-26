@@ -25,9 +25,18 @@ const GoalInput = (props) => {
      value={enteredGoal}
     />
     <View style={styles.buttonContainer}>
-     <Button title='CANCEL' color='red' onPress={props.onCancel} />
-     {/* Using AnonFunc so that the onAddGoal function is waiting to execute, */}
-     <Button title='ADD' onPress={addGoalHandler} />
+     <View>
+      <Button
+       style={styles.button}
+       title='CANCEL'
+       color='red'
+       onPress={props.onCancel}
+      />
+      {/* Using AnonFunc so that the onAddGoal function is waiting to execute, */}
+     </View>
+     <View>
+      <Button style={styles.button} title='ADD' onPress={addGoalHandler} />
+     </View>
     </View>
    </View>
   </Modal>
@@ -51,6 +60,10 @@ const styles = StyleSheet.create({
   flexDirection: 'row',
   justifyContent: 'space-between',
   width: '60%',
+ },
+
+ button: {
+  width: '40%',
  },
 });
 
